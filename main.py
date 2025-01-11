@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from ui import add_medicine, update_stock, check_low_stock, generate_report, add_user
 import database
+conn,cursor = database.connect_to_db()
 
 # Initialize the main window
 root = tk.Tk()
@@ -122,23 +123,56 @@ button_generate_report.grid(row=1, column=0)
 
 # User Management Form
 frame_user_management = tk.LabelFrame(main_content, text="User Management", padx=10, pady=10)
+
+label_Emp_name=tk.Label(frame_user_management, text="Employee Name")
+label_Emp_name.grid(row=0,column=0, padx=10)
+entry_Emp_name = tk.Entry(frame_user_management)
+entry_Emp_name.grid(row=0,column=1)
+
+label_Emp_Fname = tk.Label(frame_user_management, text="Employee Father Name")
+label_Emp_Fname.grid(row=0,column=2,padx=10)
+entry_Emp_Fname=tk.Entry(frame_user_management, bg="light yellow")
+entry_Emp_Fname.grid(row=0, column=3)
+
+label_cell = tk.Label(frame_user_management, text="Contact No")
+label_cell.grid(row=0, column=4, padx=10)
+entry_cell = tk.Entry(frame_user_management, bg="Light Yellow")
+entry_cell.grid(row=0,column=5)
+
 label_username = tk.Label(frame_user_management, text="Username:")
-label_username.grid(row=0, column=0)
+label_username.grid(row=1, column=0, pady=30)
 entry_username = tk.Entry(frame_user_management)
-entry_username.grid(row=0, column=1)
+entry_username.grid(row=1, column=1)
+
 
 label_password = tk.Label(frame_user_management, text="Password:")
-label_password.grid(row=1, column=0)
+label_password.grid(row=2, column=0)
 entry_password = tk.Entry(frame_user_management, show="*")
-entry_password.grid(row=1, column=1)
+entry_password.grid(row=2, column=1)
 
 label_role = tk.Label(frame_user_management, text="Role:")
-label_role.grid(row=2, column=0)
+label_role.grid(row=3, column=0, pady=30)
 combo_role = ttk.Combobox(frame_user_management, values=["admin", "staff"])
-combo_role.grid(row=2, column=1)
+combo_role.grid(row=3, column=1)
 
-button_add_user = tk.Button(frame_user_management, text="Add User", command=lambda: add_user(entry_username, entry_password, combo_role))
-button_add_user.grid(row=3, column=0, columnspan=2)
+
+
+button_add_user = tk.Button(
+    frame_user_management,
+    text="Add User",
+    command=lambda: add_user(
+        entry_Emp_name,
+        entry_Emp_Fname,
+        entry_cell,
+        entry_username,
+        entry_password,
+        combo_role,
+        cursor,
+        conn
+    )
+)
+
+button_add_user.grid(row=4, column=0, columnspan=2)
 
 # Function to switch between frames
 def show_frame(frame_name):

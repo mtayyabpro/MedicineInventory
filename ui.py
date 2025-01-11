@@ -76,17 +76,49 @@ def generate_report(report_display):
             report_display.insert("", "end", values=row)
 
 
-def add_user(entry_username, entry_password, combo_role):
-    username = entry_username.get()
-    password = entry_password.get()
-    role = combo_role.get()
+import tkinter as tk
+from tkinter import messagebox
 
-    conn = connect_to_db()
-    if conn:
-        cursor = conn.cursor()
-        hashed_password = hash_password(password)
-        query = "INSERT INTO users (username, password, role) VALUES (%s, %s, %s)"
-        cursor.execute(query, (username, hashed_password, role))
+def add_user(entry_Emp_name, entry_Emp_Fname, entry_cell, entry_username, entry_password, combo_role, cursor, conn):
+    try:
+        # Get the values from the fields and combobox
+        role_value = combo_role.get()
+        emp_name = entry_Emp_name.get()
+        emp_f_name = entry_Emp_Fname.get()
+        cell_value = entry_cell.get()
+        username = entry_username.get()
+        password = entry_password.get()
+
+        # Check if any of the fields are empty
+        if not (username and password and role_value and emp_name and emp_f_name and cell_value):
+            # Show error message if any field is empty
+            messagebox.showerror("Input Error", "Please fill in all fields.")
+            return
+
+        # Example code for adding a user to the database
+        query = "INSERT INTO users (username, password, role, EmpName, EmpFname, cell) VALUES (%s, %s, %s, %s, %s, %s)"
+        values = (
+            username,
+            password,
+            role_value,
+            emp_name,
+            emp_f_name,
+            cell_value
+        )
+        cursor.execute(query, values)
         conn.commit()
-        conn.close()
-        messagebox.showinfo("Success", "User added successfully!")
+        print("User added successfully!")
+
+        # Clear all the fields after adding the user
+        entry_username.delete(0, tk.END)
+        entry_password.delete(0, tk.END)
+        combo_role.set('')  # Clear the combobox selection
+        entry_Emp_name.delete(0, tk.END)
+        entry_Emp_Fname.delete(0, tk.END)
+        entry_cell.delete(0, tk.END)
+
+    except Exception as e:
+        print(f"Error adding user: {e}")
+
+
+
